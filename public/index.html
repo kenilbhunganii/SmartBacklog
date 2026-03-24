@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartBacklog</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>SmartBacklog Kanban Board</h1>
+
+<input type="text" id="title" placeholder="Enter task">
+
+<button onclick="addTicket()">
+Add Ticket
+</button>
+
+<button onclick="generateAI()">
+AI Suggest
+</button>
+
+<div class="board">
+
+<div class="column">
+<h2>To Do</h2>
+<div id="todo"></div>
+</div>
+
+<div class="column">
+<h2>In Progress</h2>
+<div id="progress"></div>
+</div>
+
+<div class="column">
+<h2>Done</h2>
+<div id="done"></div>
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
