@@ -1,44 +1,172 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>SmartBacklog</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SmartBacklog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h1>SmartBacklog Kanban Board</h1>
+  <!-- Noise overlay -->
+  <div class="noise"></div>
 
-<input type="text" id="title" placeholder="Enter task">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-mark">SB</div>
+      <div class="header-title-group">
+        <span class="header-title">SmartBacklog</span>
+        <span class="header-sub">Kanban Intelligence System</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-dot"></div>
+      <span class="status-label">System Active</span>
+      <div class="ticket-counter">
+        <span class="counter-num" id="totalCount">0</span>
+        <span class="counter-label">tasks</span>
+      </div>
+    </div>
+  </header>
 
-<button onclick="addTicket()">
-Add Ticket
-</button>
+  <!-- Rule line -->
+  <div class="rule"></div>
 
-<button onclick="generateAI()">
-AI Suggest
-</button>
+  <!-- Input section -->
+  <section class="input-section">
+    <div class="input-wrapper">
+      <div class="input-label">
+        <span class="mono">NEW_TASK</span>
+      </div>
+      <div class="input-row">
+        <div class="input-field-wrap">
+          <input
+            type="text"
+            id="title"
+            class="task-input"
+            placeholder="Describe your task..."
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="input-line"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addTicket()">
+          <span class="btn-icon">+</span>
+          <span>Add Task</span>
+        </button>
+        <button class="btn btn-ghost" onclick="generateAI()">
+          <span class="btn-icon ai-icon">◈</span>
+          <span>AI Suggest</span>
+        </button>
+      </div>
+    </div>
+  </section>
 
-<div class="board">
+  <!-- Board stats strip -->
+  <div class="stats-strip">
+    <div class="stat-item">
+      <span class="stat-num" id="todoCount">0</span>
+      <span class="stat-label">To Do</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num" id="progressCount">0</span>
+      <span class="stat-label">In Progress</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num" id="doneCount">0</span>
+      <span class="stat-label">Done</span>
+    </div>
+    <div class="stat-divider"></div>
+    <div class="stat-item">
+      <span class="stat-num completion-rate" id="completionRate">0%</span>
+      <span class="stat-label">Complete</span>
+    </div>
+  </div>
 
-<div class="column">
-<h2>To Do</h2>
-<div id="todo"></div>
-</div>
+  <!-- Board -->
+  <main class="board">
 
-<div class="column">
-<h2>In Progress</h2>
-<div id="progress"></div>
-</div>
+    <!-- TO DO -->
+    <div class="column" id="col-todo">
+      <div class="col-header">
+        <div class="col-title-row">
+          <div class="col-indicator col-indicator--todo"></div>
+          <h2 class="col-title">To Do</h2>
+        </div>
+        <div class="col-badge" id="badge-todo">0</div>
+      </div>
+      <div class="col-body" id="todo"></div>
+      <div class="col-empty" id="empty-todo">
+        <div class="empty-icon">○</div>
+        <span>No tasks yet</span>
+      </div>
+    </div>
 
-<div class="column">
-<h2>Done</h2>
-<div id="done"></div>
-</div>
+    <!-- IN PROGRESS -->
+    <div class="column" id="col-progress">
+      <div class="col-header">
+        <div class="col-title-row">
+          <div class="col-indicator col-indicator--progress"></div>
+          <h2 class="col-title">In Progress</h2>
+        </div>
+        <div class="col-badge" id="badge-progress">0</div>
+      </div>
+      <div class="col-body" id="progress"></div>
+      <div class="col-empty" id="empty-progress">
+        <div class="empty-icon">◎</div>
+        <span>Nothing in progress</span>
+      </div>
+    </div>
 
-</div>
+    <!-- DONE -->
+    <div class="column" id="col-done">
+      <div class="col-header">
+        <div class="col-title-row">
+          <div class="col-indicator col-indicator--done"></div>
+          <h2 class="col-title">Done</h2>
+        </div>
+        <div class="col-badge" id="badge-done">0</div>
+      </div>
+      <div class="col-body" id="done"></div>
+      <div class="col-empty" id="empty-done">
+        <div class="empty-icon">●</div>
+        <span>No completed tasks</span>
+      </div>
+    </div>
 
-<script src="script.js"></script>
+  </main>
 
+  <!-- AI Modal -->
+  <div class="modal-overlay" id="aiModal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title-row">
+          <span class="modal-icon">◈</span>
+          <span class="modal-title">AI Analysis</span>
+        </div>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="modal-rule"></div>
+      <div class="modal-body" id="modalBody">
+        <div class="modal-loading">
+          <div class="loader-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <p class="loading-text">Analyzing task...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="script.js"></script>
 </body>
 </html>
